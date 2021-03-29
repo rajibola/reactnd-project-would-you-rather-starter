@@ -1,16 +1,27 @@
 import { getInitialData } from '../utils/api';
-import { receiveUsers } from '../actions/users';
-import { receiveQuestions } from '../actions/questions';
-import { setAuthedUser } from '../actions/authedUser';
-
-const AUTHED_ID = 'tylermcginnis';
+import { addUserQuestion, receiveUsers } from '../actions/users';
+import { addQuestion, receiveQuestions } from '../actions/questions';
+import { saveQuestion } from '../utils/api';
 
 export function handleInitialData() {
   return (dispatch) => {
     return getInitialData().then(({ users, questions }) => {
       dispatch(receiveUsers(users));
       dispatch(receiveQuestions(questions));
-      dispatch(setAuthedUser(AUTHED_ID));
+    });
+  };
+}
+
+export function handleAddQuestion(optionOneText, optionTwoText) {
+  return (dispatch, getState) => {
+    const { authedUser } = getState();
+    return saveQuestion({
+      optionOneText,
+      optionTwoText,
+      author: authedUser,
+    }).then((question) => {
+      dispatch(addQuestion(question));
+      dispatch(addUserQuestion(authedUser, question.id));
     });
   };
 }
