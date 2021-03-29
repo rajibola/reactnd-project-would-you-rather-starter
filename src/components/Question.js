@@ -1,32 +1,27 @@
-// import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-// import { formatQuestion } from '../utils/helpers';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Card, CardBody, CardTitle } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 
-// class Question extends Component {
-//   render() {
-//     const { question } = this.props;
+const Question = (props) => {
+  const { question } = props;
+  return (
+    <Card>
+      <CardBody>
+        <CardTitle>Would You Rather</CardTitle>
+        <ul>
+          <li>{question.optionOne.text}</li>
+          <li>{question.optionTwo.text}</li>
+        </ul>
+      </CardBody>
+    </Card>
+  );
+};
 
-//     const { author } = question;
-//     return (
-//       <div className='question'>
-//         {author}
-//         {}
-//       </div>
-//     );
-//   }
-// }
+function mapStateToProps({ questions }, { id }) {
+  return {
+    question: questions[id],
+  };
+}
 
-// function mapStateToProps({ authedUser, users, questions }, { id }) {
-//   const question = questions[id];
-//   var options = {
-//     optionOneText: question.optionOne.text,
-//     optionTwoText: question.optionTwo.text,
-//     author: question.author,
-//   };
-//   return {
-//     authedUser,
-//     question: formatQuestion(options),
-//   };
-// }
-
-// export default connect(mapStateToProps)(Question);
+export default withRouter(connect(mapStateToProps, null)(Question));

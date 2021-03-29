@@ -1,30 +1,92 @@
-// import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-// import Question from './Question';
+import React, { PureComponent } from 'react';
+import {
+  TabContent,
+  TabPane,
+  Nav,
+  NavItem,
+  NavLink,
+  Row,
+  Col,
+} from 'reactstrap';
+import classnames from 'classnames';
+import Question from './Question';
+import { connect } from 'react-redux';
 
-// class Dashboard extends Component {
-//   render() {
-//     return (
-//       <div>
-//         <h3 className='center'>Your timeline</h3>
-//         <ul className='dashboard-list'>
-//           {this.props.questionIds.map((id) => (
-//             <li key={id}>
-//               <Question id={id} />
-//             </li>
-//           ))}
-//         </ul>
-//       </div>
-//     );
-//   }
-// }
+class DashBoard extends PureComponent {
+  state = {
+    activeTab: '1',
+  };
 
-// function mapStateToProps({ questions }) {
-//   return {
-//     questionIds: Object.keys(questions).sort(
-//       (a, b) => questions[b].timestamp - questions[a].timestamp
-//     ),
-//   };
-// }
+  toggle(tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab,
+      });
+    }
+  }
 
-// export default connect(mapStateToProps)(Dashboard);
+  render() {
+    const { unansweredQuestions, answeredQuestions } = this.props;
+
+    return (
+      <div>
+        <Nav tabs>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === '1' })}
+              onClick={() => {
+                this.toggle('1');
+              }}
+            >
+              Unanswered
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === '2' })}
+              onClick={() => {
+                this.toggle('2');
+              }}
+            >
+              Answered
+            </NavLink>
+          </NavItem>
+        </Nav>
+
+        <TabContent activeTab={this.state.activeTab}>
+          <TabPane tabId='1'>
+            <Row>
+              {unansweredQuestions.map((qid) => (
+                <Col key={qid} sm='6' md='4'>
+                  <Question id={qid} />
+                </Col>
+              ))}
+            </Row>
+          </TabPane>
+          <TabPane tabId='2'>
+            <Row>
+              {answeredQuestions.map((qid) => (
+                <Col key={qid} sm='6' md='4'>
+                  <Question id={qid} />
+                </Col>
+              ))}
+            </Row>
+          </TabPane>
+        </TabContent>
+      </div>
+    );
+  }
+}
+
+function mapStateToProps({ questions, users, authedUser }) {
+  const user = users[authedUser];
+  const answeredQuestions = Object.keys(user.answers);
+  return {
+    unansweredQuestions: Object.keys(questions).filter(
+      (qid) => !answeredQuestions.includes(qid)
+    ),
+    answeredQuestions,
+  };
+}
+
+export default connect(mapStateToProps)(DashBoard);
