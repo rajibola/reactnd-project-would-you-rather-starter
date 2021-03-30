@@ -53,7 +53,7 @@ class Login extends PureComponent {
                 ))}
               </Input>
             </FormGroup>
-            <input type='submit' value='Submit' />
+            <input disabled={userId === ''} type='submit' value='Submit' />
           </Form>
         </Col>
       </Row>

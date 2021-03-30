@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Login from './Login';
 import NewQuestion from './NewQuestion';
-import Question from './Question';
+import QuestionDetails from './QuestionDetails';
 import LeaderBoard from './LeaderBoard';
 
 function Routes(props) {
@@ -18,7 +18,7 @@ function Routes(props) {
             <Route path='/' exact component={Dashboard} />
             <Route path='/add' component={NewQuestion} />
             <Route path='/leaderboard' exact component={LeaderBoard} />
-            <Route path='/questions/:id' component={Question} />
+            <Route path='/questions/:id' component={QuestionDetails} />
           </Fragment>
         )}
       </Switch>
