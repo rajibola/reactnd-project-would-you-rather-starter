@@ -6,6 +6,7 @@ import Login from './Login';
 import NewQuestion from './NewQuestion';
 import QuestionDetails from './QuestionDetails';
 import LeaderBoard from './LeaderBoard';
+import Logout from './Logout';
 
 function Routes(props) {
   return (
@@ -19,6 +20,7 @@ function Routes(props) {
             <Route path='/add' component={NewQuestion} />
             <Route path='/leaderboard' exact component={LeaderBoard} />
             <Route path='/questions/:id' component={QuestionDetails} />
+            <Route exact path='/logout' component={Logout} />
           </Fragment>
         )}
       </Switch>

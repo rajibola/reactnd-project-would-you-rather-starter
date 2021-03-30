@@ -26,11 +26,6 @@ class NavBar extends PureComponent {
     });
   };
 
-  logout = (e) => {
-    const { logout } = this.props;
-    logout();
-  };
-
   render() {
     const { authedUser } = this.props;
 
@@ -59,7 +54,9 @@ class NavBar extends PureComponent {
                     <User id={authedUser} />
                   </NavItem>
                   <NavItem>
-                    <NavLink onClick={this.logout}>Logout</NavLink>
+                    <NavLink tag={Link} to='/logout'>
+                      Logout
+                    </NavLink>
                   </NavItem>
                 </Nav>
               </Collapse>

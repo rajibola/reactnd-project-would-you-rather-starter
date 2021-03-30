@@ -13,14 +13,12 @@ import {
   Col,
 } from 'reactstrap';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import User from './User';
 import { handleAnswer } from '../actions/shared';
 
 class QuestionDetails extends PureComponent {
   state = {
     selectedOption: '',
-    redirect: false,
   };
 
   radioSelected = (e) => {
@@ -32,15 +30,18 @@ class QuestionDetails extends PureComponent {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.saveQuestionAnswer(this.state.selectedOption);
-    this.setState({ redirect: true });
   };
 
   render() {
-    const { question, questionAuthor } = this.props;
-    const { selectedOption, redirect } = this.state;
-    if (redirect) {
-      return <Redirect to='/' />;
-    }
+    const {
+      question,
+      questionAuthor,
+      answer,
+      total,
+      percentageOne,
+      percentageTwo,
+    } = this.props;
+    const { selectedOption } = this.state;
 
     return (
       <Row>
@@ -51,33 +52,65 @@ class QuestionDetails extends PureComponent {
             </CardHeader>
             <CardBody>
               <CardTitle>Would You Rather</CardTitle>
-              <Form onSubmit={this.handleSubmit}>
-                <FormGroup tag='fieldset'>
+              {answer ? (
+                <div>
                   <FormGroup>
-                    <Label>
-                      <Input
-                        type='radio'
-                        name='radio1'
-                        value='optionOne'
-                        onChange={this.radioSelected}
-                      />{' '}
-                      {question.optionOne.text}
-                    </Label>
+                    <FormGroup check disabled>
+                      <Label check>
+                        <Input type='radio' checked={answer === 'optionOne'} />
+                        {'  '}
+                        {question.optionOne.text}
+                      </Label>
+                    </FormGroup>
+                    <FormGroup check disabled>
+                      <Label check>
+                        <Input type='radio' checked={answer === 'optionTwo'} />
+                        {'  '}
+                        {question.optionTwo.text}
+                      </Label>
+                    </FormGroup>
                   </FormGroup>
-                  <FormGroup>
-                    <Label>
-                      <Input
-                        type='radio'
-                        name='radio1'
-                        value='optionTwo'
-                        onChange={this.radioSelected}
-                      />{' '}
-                      {question.optionTwo.text}
-                    </Label>
+                  <div className='progress'>
+                    <div
+                      className='progress-one'
+                      style={{ width: `${percentageOne}%` }}
+                    >{`${parseFloat(percentageOne).toFixed(2)}%`}</div>
+                    <div
+                      className='progress-two'
+                      style={{ width: `${percentageTwo}%` }}
+                    >{`${parseFloat(percentageTwo).toFixed(2)}%`}</div>
+                  </div>
+                  <div className='total'>Total number of votes: {total}</div>
+                </div>
+              ) : (
+                <Form onSubmit={this.handleSubmit}>
+                  <FormGroup tag='fieldset'>
+                    <FormGroup>
+                      <Label>
+                        <Input
+                          type='radio'
+                          name='radio1'
+                          value='optionOne'
+                          onChange={this.radioSelected}
+                        />{' '}
+                        {question.optionOne.text}
+                      </Label>
+                    </FormGroup>
+                    <FormGroup>
+                      <Label>
+                        <Input
+                          type='radio'
+                          name='radio1'
+                          value='optionTwo'
+                          onChange={this.radioSelected}
+                        />{' '}
+                        {question.optionTwo.text}
+                      </Label>
+                    </FormGroup>
                   </FormGroup>
-                </FormGroup>
-                <Button disabled={selectedOption === ''}>Submit</Button>
-              </Form>
+                  <Button disabled={selectedOption === ''}>Submit</Button>
+                </Form>
+              )}
             </CardBody>
           </Card>
         </Col>
@@ -86,13 +119,28 @@ class QuestionDetails extends PureComponent {
   }
 }
 
-function mapStateToProps({ questions, users, authedUser }, props) {
-  const { id } = props.match.params;
+function mapStateToProps({ questions, users, authedUser }, { match }) {
+  const answers = users[authedUser].answers;
+  let answer, percentageOne, percentageTwo, total;
+  const { id } = match.params;
   const question = questions[id];
+  if (answers.hasOwnProperty(question.id)) {
+    answer = answers[question.id];
+  }
   const questionAuthor = users[question.author];
+  let questionOneTotal = question.optionOne.votes.length;
+  let questionTwoTotal = question.optionTwo.votes.length;
+
+  total = questionOneTotal + questionTwoTotal;
+  percentageOne = (questionOneTotal / total) * 100;
+  percentageTwo = (questionTwoTotal / total) * 100;
   return {
     question,
     questionAuthor,
+    answer,
+    total,
+    percentageOne,
+    percentageTwo,
   };
 }
 
