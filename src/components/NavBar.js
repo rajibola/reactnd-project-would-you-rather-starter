@@ -7,11 +7,12 @@ import {
   NavItem,
   NavLink,
 } from 'reactstrap';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { PureComponent, Fragment } from 'react';
 import User from './User';
+import Login from './Login';
 import { unsetAuthedUser } from '../actions/authedUser';
 
 class NavBar extends PureComponent {
@@ -39,7 +40,7 @@ class NavBar extends PureComponent {
           <NavbarBrand tag={Link} to='/'>
             Would You Rather
           </NavbarBrand>
-          {authedUser && (
+          {authedUser ? (
             <Fragment>
               <NavbarToggler onClick={this.toggle} />
               <Collapse isOpen={this.state.isOpen} navbar>
@@ -63,6 +64,8 @@ class NavBar extends PureComponent {
                 </Nav>
               </Collapse>
             </Fragment>
+          ) : (
+            <Redirect to='/' exact component={Login} />
           )}
         </Navbar>
       </div>
