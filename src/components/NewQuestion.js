@@ -14,11 +14,13 @@ import {
   Row,
 } from 'reactstrap';
 import { handleAddQuestion } from '../actions/shared';
+import { Redirect } from 'react-router-dom';
 
 class NewQuestion extends Component {
   state = {
     optionOne: '',
     optionTwo: '',
+    redirect: false,
   };
 
   handleOptionOneChange = (event) => {
@@ -27,23 +29,24 @@ class NewQuestion extends Component {
       optionOne: event.target.value,
     });
   };
-
   handleOptionTwoChange = (event) => {
     event.preventDefault();
     this.setState({
       optionTwo: event.target.value,
     });
   };
-
   handleSubmit = (event) => {
     event.preventDefault();
     const { optionOne, optionTwo } = this.state;
     this.props.addQuestion(optionOne, optionTwo);
+    this.setState({ redirect: true });
   };
 
   render() {
-    const { text } = this.state;
-    const questionLeft = 280 - text.length;
+    if (this.state.redirect) {
+      return <Redirect to='/' />;
+    }
+    const { optionOne, optionTwo } = this.state;
     return (
       <Row>
         <Col sm='12' md={{ size: 6, offset: 3 }}>
@@ -82,12 +85,10 @@ class NewQuestion extends Component {
     );
   }
 }
-
 NewQuestion.propTypes = {
   authedUser: PropTypes.string.isRequired,
   addQuestion: PropTypes.func.isRequired,
 };
-
 function mapDispatchToProps(dispatch) {
   return {
     addQuestion: (optionOne, optionTwo) => {
@@ -95,5 +96,4 @@ function mapDispatchToProps(dispatch) {
     },
   };
 }
-
 export default connect(null, mapDispatchToProps)(NewQuestion);
