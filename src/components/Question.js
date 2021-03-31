@@ -10,14 +10,26 @@ class Question extends React.Component {
   };
 
   render() {
-    const { question } = this.props;
+    const { question, auth } = this.props;
     return (
       <Card onClick={(e) => this.loadQuestionDetails(e, question.id)}>
         <CardBody>
           <CardTitle>Would You Rather</CardTitle>
           <ul>
-            <li>{question.optionOne.text}</li>
-            <li>{question.optionTwo.text}</li>
+            <li
+              className={
+                question.optionOne.votes.includes(auth) ? 'optionSelected' : ''
+              }
+            >
+              {question.optionOne.text}
+            </li>
+            <li
+              className={
+                question.optionTwo.votes.includes(auth) ? 'optionSelected' : ''
+              }
+            >
+              {question.optionTwo.text}
+            </li>
           </ul>
         </CardBody>
       </Card>

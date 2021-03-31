@@ -7,6 +7,7 @@ import NewQuestion from './NewQuestion';
 import QuestionDetails from './QuestionDetails';
 import LeaderBoard from './LeaderBoard';
 import Logout from './Logout';
+import NotFound from './NotFound';
 
 function Routes(props) {
   return (
@@ -19,10 +20,12 @@ function Routes(props) {
             <Route path='/' exact component={Dashboard} />
             <Route path='/add' component={NewQuestion} />
             <Route path='/leaderboard' exact component={LeaderBoard} />
+            <Route path='/questions/bad_id' component={NotFound} />
             <Route path='/questions/:id' component={QuestionDetails} />
             <Route exact path='/logout' component={Logout} />
           </Fragment>
         )}
+        <Route component={NotFound} />
       </Switch>
     </div>
   );

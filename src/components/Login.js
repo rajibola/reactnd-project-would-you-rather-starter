@@ -8,15 +8,13 @@ class Login extends PureComponent {
   constructor(props) {
     super(props);
     this.state = { userId: '' };
-    this.handleChangeUser = this.handleChangeUser.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChangeUser(event) {
+  handleChangeUser = (event) => {
     this.setState({ userId: event.target.value });
-  }
+  };
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     const { userId } = this.state;
     const { authenticate } = this.props;
     if (userId) {
@@ -25,7 +23,7 @@ class Login extends PureComponent {
       alert('Please select a user.');
     }
     event.preventDefault();
-  }
+  };
 
   render() {
     const { users } = this.props;

@@ -224,3 +224,11 @@ div.card {
 .form-check {
   padding-left: auto;
 }
+
+.optionSelected {
+  font-weight: bold;
+  /* color: blueviolet; */
+  border-left: 5px solid rgba(43, 22, 22, 0.658);
+  padding: 0%;
+  padding-left: 10px;
+}

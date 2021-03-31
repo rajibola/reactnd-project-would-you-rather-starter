@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { handleInitialData } from '../actions/shared';
 import Routes from './Routes';
 import NavBar from './NavBar';
+import Login from './Login';
 
 class App extends Component {
   componentDidMount() {
@@ -15,8 +16,17 @@ class App extends Component {
       <Router>
         <Fragment>
           <div className='main-container'>
-            <NavBar />
-            <Routes notLoggedIn={notLoggedIn} />
+            {notLoggedIn ? (
+              <>
+                <NavBar />
+                <Route render={() => <Login />} />
+              </>
+            ) : (
+              <>
+                <NavBar />
+                <Routes notLoggedIn={notLoggedIn} />
+              </>
+            )}
           </div>
         </Fragment>
       </Router>

@@ -15,6 +15,7 @@ import {
 import { connect } from 'react-redux';
 import User from './User';
 import { handleAnswer } from '../actions/shared';
+import { Redirect } from 'react-router';
 
 class QuestionDetails extends PureComponent {
   state = {
@@ -41,6 +42,10 @@ class QuestionDetails extends PureComponent {
       percentageOne,
       percentageTwo,
     } = this.props;
+
+    if (!question) {
+      return <Redirect to='/questions/bad_id' />;
+    }
     const { selectedOption } = this.state;
 
     return (
@@ -59,14 +64,16 @@ class QuestionDetails extends PureComponent {
                       <Label check>
                         <Input type='radio' checked={answer === 'optionOne'} />
                         {'  '}
-                        {question.optionOne.text}
+                        {question.optionOne.text} -
+                        {question.optionOne.votes.length} of {total} votes
                       </Label>
                     </FormGroup>
                     <FormGroup check disabled>
                       <Label check>
                         <Input type='radio' checked={answer === 'optionTwo'} />
                         {'  '}
-                        {question.optionTwo.text}
+                        {question.optionTwo.text} -
+                        {question.optionTwo.votes.length} of {total} votes
                       </Label>
                     </FormGroup>
                   </FormGroup>
@@ -92,6 +99,7 @@ class QuestionDetails extends PureComponent {
                           name='radio1'
                           value='optionOne'
                           onChange={this.radioSelected}
+                          readOnly
                         />{' '}
                         {question.optionOne.text}
                       </Label>
@@ -103,6 +111,7 @@ class QuestionDetails extends PureComponent {
                           name='radio1'
                           value='optionTwo'
                           onChange={this.radioSelected}
+                          readOnly
                         />{' '}
                         {question.optionTwo.text}
                       </Label>
@@ -124,12 +133,12 @@ function mapStateToProps({ questions, users, authedUser }, { match }) {
   let answer, percentageOne, percentageTwo, total;
   const { id } = match.params;
   const question = questions[id];
-  if (answers.hasOwnProperty(question.id)) {
+  if (answers.hasOwnProperty(question?.id)) {
     answer = answers[question.id];
   }
-  const questionAuthor = users[question.author];
-  let questionOneTotal = question.optionOne.votes.length;
-  let questionTwoTotal = question.optionTwo.votes.length;
+  const questionAuthor = users[question?.author];
+  let questionOneTotal = question?.optionOne.votes.length;
+  let questionTwoTotal = question?.optionTwo.votes.length;
 
   total = questionOneTotal + questionTwoTotal;
   percentageOne = (questionOneTotal / total) * 100;
